@@ -1,0 +1,195 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Question API",
+    "version": "1.0.0",
+    "description": "API для управления вопросами"
+  },
+    "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "paths": {
+    "/api/questions": {
+      "get": {
+        "summary": "Получить список всех вопросов",
+        "responses": {
+          "200": {
+            "description": "Успешный запрос",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "Уникальный идентификатор вопроса"
+                      },
+                      "text": {
+                        "type": "string",
+                        "description": "Текст вопроса"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/random_question": {
+       "get": {
+        "summary": "Получить случайный вопрос",
+        "responses": {
+          "200": {
+            "description": "Успешный запрос",
+             "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                         "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "description": "Уникальный идентификатор вопроса"
+                                 },
+                                "text": {
+                                   "type": "string",
+                                    "description": "Текст вопроса"
+                                  }
+                             }
+                     }
+                  }
+               }
+          }
+        }
+      },
+         "post": {
+          "summary": "Получить случайный вопрос и удалить текущий",
+            "requestBody": {
+                  "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                           "properties": {
+                                 "currentQuestionId": {
+                                      "type": "integer",
+                                      "description": "Уникальный идентификатор текущего вопроса"
+                                }
+                            }
+                       }
+                    }
+                }
+            },
+            "responses": {
+             "200": {
+                "description": "Успешный запрос",
+                "content": {
+                     "application/json": {
+                          "schema": {
+                              "type": "object",
+                             "properties": {
+                                  "id": {
+                                        "type": "integer",
+                                      "description": "Уникальный идентификатор вопроса"
+                                   },
+                                  "text": {
+                                     "type": "string",
+                                     "description": "Текст вопроса"
+                                }
+                             }
+                         }
+                    }
+                  }
+             }
+         }
+      }
+   },
+    "/questions": {
+      "post": {
+        "summary": "Добавить новый вопрос",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                 "properties": {
+                   "question": {
+                     "type": "string",
+                     "description": "Текст вопроса"
+                   }
+                }
+              }
+            }
+          }
+        },
+         "responses": {
+           "200": {
+              "description": "Успешный запрос"
+            }
+       }
+      }
+    },
+    "/questions/{id}": {
+        "put": {
+          "summary": "Обновить вопрос",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "description": "ID вопроса",
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "requestBody": {
+             "required": true,
+             "content": {
+                 "application/json": {
+                     "schema": {
+                        "type": "object",
+                            "properties": {
+                                  "question": {
+                                   "type": "string",
+                                    "description": "Текст вопроса"
+                                   }
+                             }
+                         }
+                   }
+               }
+           },
+            "responses": {
+            "200": {
+                "description": "Успешный запрос"
+            }
+         }
+        },
+        "delete": {
+          "summary": "Удалить вопрос",
+           "parameters": [
+               {
+                   "name": "id",
+                   "in": "path",
+                    "required": true,
+                    "description": "ID вопроса",
+                  "schema": {
+                       "type": "integer"
+                   }
+               }
+           ],
+            "responses": {
+              "200": {
+                 "description": "Успешный запрос"
+            }
+        }
+      }
+    }
+  }
+}

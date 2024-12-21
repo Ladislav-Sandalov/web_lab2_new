@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Случайный вопрос</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="icon" href="/questions.png" type="image/png">
+</head>
+<body>
+    <h1>Задай вопрос</h1>
+    <nav>
+         <ul>
+              <li><a href="/">Главная</a></li>
+              <li><a href="/add_question">Добавить вопрос</a></li>
+               <li><a href="/questions">Список вопросов</a></li>
+             <li class="current"><a href="/random_question">Ответить на вопрос</a></li>
+               <li><a href="/contacts">Контакты</a></li>
+               <li><a href="/api-docs">Документация API</a></li>
+         </ul>
+     </nav>
+    <div class="content-wrapper">
+        <h1>Случайный вопрос</h1>
+            <div id="random-question-container">
+                <p id="random-question"> </p>
+                  <form action="/random_question" method="post">
+                    <input type="hidden" name="currentQuestionId" id="currentQuestionId" value="">
+                    <input type="text" id="answer-text" name="answer" placeholder="Введите свой ответ" required>
+                    <button type="submit" id="next-button">Ответить</button>
+                </form>
+            </div>
+        </div>
+     <script>
+        const questionText = document.getElementById('random-question');
+        const nextButton = document.getElementById('next-button');
+         const currentQuestionId = document.getElementById('currentQuestionId');
+         function getQuestion() {
+            nextButton.disabled = true;
+              fetch('/api/random_question')
+                 .then(response => response.json())
+                  .then(data => {
+                      if(data && data.text){
+                           questionText.innerHTML = data.text
+                           currentQuestionId.value = data.id || '';
+                         } else {
+                             questionText.innerHTML = 'Нет больше вопросов.';
+                              currentQuestionId.value = '';
+                        }
+                    })
+                   .catch(error => console.error('Error fetching random question:', error))
+                  .finally(() => {
+                           nextButton.disabled = false;
+                      });
+          }
+
+          function getNewQuestion() {
+                nextButton.disabled = true;
+               fetch('/api/random_question',{
+                   method: 'POST',
+                    headers: {
+                         'Content-Type': 'application/json'
+                       },
+                    body: JSON.stringify({currentQuestionId: currentQuestionId.value})
+               })
+                  .then(response => {
+                     if (response.ok) {
+                       getQuestion()
+                   } else {
+                         questionText.innerHTML = 'Нет больше вопросов.';
+                        currentQuestionId.value = '';
+                      }
+                   })
+                .catch(error => console.error('Error fetching random question:', error))
+                  .finally(() => {
+                           nextButton.disabled = false;
+                      });
+          }
+        document.querySelector('form').addEventListener('submit', function(e) {
+             e.preventDefault();
+               getNewQuestion();
+        });
+      getQuestion();
+     </script>
+</body>
+</html>
